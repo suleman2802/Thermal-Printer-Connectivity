@@ -255,19 +255,18 @@
 //   }
 // }
 //? new
-import 'dart:io';
 
-import 'package:flutter/material.dart';
+import 'dart:typed_data' show ByteData, Uint8List;
+import 'package:intl/intl.dart';
+
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_esc_pos_network/flutter_esc_pos_network.dart';
 import 'package:flutter_esc_pos_utils/flutter_esc_pos_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import 'package:flutter/services.dart';
-import 'package:image/src/image/image.dart';
+import 'package:flutter/material.dart';
 
-import 'package:printer_integration_application/logo_image.dart';
-
-import 'package:qr_flutter/qr_flutter.dart';
+import 'package:image/image.dart' as Img;
 
 class ThermalPrinterConnectivity extends StatefulWidget {
   const ThermalPrinterConnectivity({super.key});
@@ -279,22 +278,34 @@ class ThermalPrinterConnectivity extends StatefulWidget {
 
 class _ThermalPrinterConnectivityState
     extends State<ThermalPrinterConnectivity> {
-  TextEditingController ipController = TextEditingController();
+  TextEditingController ipController = TextEditingController(
+    text: "192.168.1.63",
+  );
 
   // Function to build the receipt
   Future<List<int>> connectionBuild() async {
     final profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm80, profile);
     List<int> bytes = [];
-    final image = await genrateLogo();
-    if (image == null) {
-      print("if");
-    } else {
-      print("else");
-      bytes += generator.image(image);
-      bytes += generator.setStyles(PosStyles(align: PosAlign.center));
-    }
+    // final Image? image = await genrateLogo();
+    // if (image == null) {
+    //   print("if");
+    // } else {
+    //   print("else");
+    //   bytes += generator.image(image);
+    //   bytes += generator.setStyles(PosStyles(align: PosAlign.center));
+    // }
+    final ByteData data = await rootBundle.load('assets/image/logo1.jpg');
 
+    final Uint8List byte = data.buffer.asUint8List();
+
+    final Img.Image image = Img.decodeImage(byte)!;
+    // Using `ESC *`
+    bytes += generator.image(image);
+    // Using `GS v 0` (obsolete)
+    //! bytes+=  generator.imageRaster(image);
+    // Using `GS ( L`
+    //! bytes+= generator.imageRaster(image, imageFn: PosImageFn.graphics);
     // Add logo at the top (if available)
     // final logoBytes = await loadLogo();
     // EscPosImage logoImage = await decodeImageFromList(logoBytes);
@@ -355,53 +366,23 @@ class _ThermalPrinterConnectivityState
       ),
     );
 
+    bytes += generator.text(
+      'Cashier : Amar Kahsif',
+      styles: const PosStyles(
+        align: PosAlign.left,
+        // height: PosTextSize.size2,
+        // width: PosTextSize.size2,
+      ),
+    );
+    bytes += generator.text(
+      'Date : ${ DateFormat('dd-MM-yyy hh:mm:ss a').format(DateTime.now()).toString()}',
+      styles: const PosStyles(
+        align: PosAlign.left,
+        // height: PosTextSize.size2,
+        // width: PosTextSize.size2,
+      ),
+    );
     bytes += generator.emptyLines(1);
-
-    // // Items list (Item Name, Price, Refund/Exchange status)
-    // List<Map<String, String>> items = [
-    //   {'name': 'MANGO LASSI', 'price': '\$2.99', 'status': 'Refunded: -\$2.99'},
-    //   {
-    //     'name': 'CHICKEN BIRYANI',
-    //     'price': '\$8.99',
-    //     'status': 'Exchanged: \$8.99',
-    //   },
-    //   {
-    //     'name': 'CHICKEN PULAO',
-    //     'price': '\$8.99',
-    //     'status': 'Refunded: -\$8.99',
-    //   },
-    // ];
-
-    // for (var item in items) {
-    //   // Print the item name on the left, price on the right
-    //   bytes += generator.text(
-    //     '${item['name']?.padRight(20)}${item['price']?.padLeft(10)}',
-    //     styles: const PosStyles(align: PosAlign.left),
-    //   );
-    //   bytes += generator.text(
-    //     '${item['status']?.padLeft(40)}',
-    //     styles: const PosStyles(align: PosAlign.right),
-    //   );
-    // }
-
-    // // Sales Tax and Total
-    // bytes += generator.emptyLines(1);
-    // bytes += generator.text(
-    //   'Sales Tax: 8.25%   \$0.99',
-    //   styles: const PosStyles(align: PosAlign.left),
-    // );
-    // bytes += generator.text(
-    //   'Total: \$0.00',
-    //   styles: const PosStyles(align: PosAlign.left),
-    // );
-
-    // // Payment Information
-    // bytes += generator.emptyLines(1);
-    // bytes += generator.text(
-    //   'CASH SALE      \$12.97\nCash Tendered    \$20.00\nChange         \$7.03',
-    //   styles: const PosStyles(align: PosAlign.left),
-    // );
-
     bytes += generator.row([
       PosColumn(
         text: '1  Mango Lassi',
@@ -578,6 +559,8 @@ class _ThermalPrinterConnectivityState
         width: PosTextSize.size1,
       ),
     );
+
+    bytes += generator.emptyLines(1);
 
     bytes += generator.qrcode('example.com', size: QRSize.size8);
 
