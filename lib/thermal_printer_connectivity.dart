@@ -375,7 +375,7 @@ class _ThermalPrinterConnectivityState
       ),
     );
     bytes += generator.text(
-      'Date : ${ DateFormat('dd-MM-yyy hh:mm:ss a').format(DateTime.now()).toString()}',
+      'Date : ${DateFormat('dd-MM-yyy hh:mm:ss a').format(DateTime.now()).toString()}',
       styles: const PosStyles(
         align: PosAlign.left,
         // height: PosTextSize.size2,
@@ -396,16 +396,20 @@ class _ThermalPrinterConnectivityState
       //   styles: PosStyles(align: PosAlign.center, underline: true),
       // ),
       PosColumn(
-        text: '\$ 2.99',
+        text: '\$ 2.99 ',
         width: 3,
         styles: PosStyles(align: PosAlign.right, underline: false),
       ),
     ]);
-
     bytes += generator.text(
-      'Refunded - \$ 2.99',
+      '+ 1x without sugar  \$ 0.00 ',
       styles: const PosStyles(align: PosAlign.right),
     );
+    bytes += generator.text(
+      '+ 3x Ice-Creem Scoop  \$ 2.90 ',
+      styles: const PosStyles(align: PosAlign.right),
+    );
+
     bytes += generator.emptyLines(1);
 
     bytes += generator.row([
@@ -420,14 +424,14 @@ class _ThermalPrinterConnectivityState
       //   styles: PosStyles(align: PosAlign.center, underline: true),
       // ),
       PosColumn(
-        text: '\$ 8.99',
+        text: '\$ 8.99 ',
         width: 3,
         styles: PosStyles(align: PosAlign.right, underline: false),
       ),
     ]);
 
     bytes += generator.text(
-      'Exchanged - \$ 8.99',
+      'Exchanged - \$ 8.99 ',
       styles: const PosStyles(align: PosAlign.right),
     );
     bytes += generator.emptyLines(1);
@@ -444,14 +448,14 @@ class _ThermalPrinterConnectivityState
       //   styles: PosStyles(align: PosAlign.center, underline: true),
       // ),
       PosColumn(
-        text: '\$ 8.99',
+        text: '\$ 8.99 ',
         width: 3,
         styles: PosStyles(align: PosAlign.right, underline: false),
       ),
     ]);
 
     bytes += generator.text(
-      'Refunded - \$ 8.99',
+      'Refunded - \$ 8.99 ',
       styles: const PosStyles(align: PosAlign.right),
     );
 
@@ -469,7 +473,7 @@ class _ThermalPrinterConnectivityState
         styles: PosStyles(align: PosAlign.center, underline: false),
       ),
       PosColumn(
-        text: '\$ 0.99',
+        text: '\$ 0.99 ',
         width: 4,
         styles: PosStyles(align: PosAlign.right, underline: false),
       ),
@@ -491,7 +495,7 @@ class _ThermalPrinterConnectivityState
       ),
 
       PosColumn(
-        text: '\$ 0.00',
+        text: '\$ 0.00 ',
         width: 6,
         styles: PosStyles(
           align: PosAlign.right,
@@ -511,7 +515,7 @@ class _ThermalPrinterConnectivityState
       ),
 
       PosColumn(
-        text: '\$ 12.97',
+        text: '\$ 12.97 ',
         width: 6,
         styles: PosStyles(align: PosAlign.right, underline: false, bold: false),
       ),
@@ -525,7 +529,7 @@ class _ThermalPrinterConnectivityState
       ),
 
       PosColumn(
-        text: '\$ 20.00',
+        text: '\$ 20.00 ',
         width: 6,
         styles: PosStyles(align: PosAlign.right, underline: false, bold: false),
       ),
@@ -539,7 +543,7 @@ class _ThermalPrinterConnectivityState
       ),
 
       PosColumn(
-        text: '\$ 7.03',
+        text: '\$ 7.03 ',
         width: 6,
         styles: PosStyles(align: PosAlign.right, underline: false, bold: false),
       ),
@@ -574,6 +578,102 @@ class _ThermalPrinterConnectivityState
     //   'Payment Y5HPK6TQRWR',
     //   styles: const PosStyles(align: PosAlign.center),
     // );
+
+    bytes += generator.cut();
+
+    return bytes;
+  }
+
+  // Function to build the receipt
+  Future<List<int>> connectionBuild1() async {
+    final profile = await CapabilityProfile.load();
+    final generator = Generator(PaperSize.mm80, profile);
+    List<int> bytes = [];
+
+    bytes += generator.text(
+      'Rafia',
+      styles: const PosStyles(
+        align: PosAlign.center,
+        height: PosTextSize.size2,
+        width: PosTextSize.size2,
+        bold: true,
+      ),
+    );
+    bytes += generator.text(
+      'ORDER: 0041',
+      styles: const PosStyles(
+        align: PosAlign.center,
+        height: PosTextSize.size2,
+        width: PosTextSize.size2,
+        bold: true,
+      ),
+    );
+
+    bytes += generator.text(
+      'TO GO PHONE ORDER',
+      styles: const PosStyles(
+        align: PosAlign.center,
+        height: PosTextSize.size2,
+        width: PosTextSize.size2,
+        bold: true,
+      ),
+    );
+
+    bytes += generator.emptyLines(1);
+
+    // Print date and time
+    bytes += generator.text(
+      'Date: ${DateFormat('yyyy-MM-dd h:mm:ss a').format(DateTime.now()).toString()}',
+      styles: const PosStyles(align: PosAlign.left),
+    );
+
+    // bytes += generator.text(
+    //   'Printed: ${DateFormat('yyyy-MM-dd h:mm:ss a').format(DateTime.now()).toString()}',
+    //   styles: const PosStyles(align: PosAlign.left),
+    // );
+
+    bytes += generator.text(
+      "Order Note : Don't make any thing spicy",
+      styles: const PosStyles(align: PosAlign.left),
+    );
+
+    bytes += generator.emptyLines(1);
+
+    // Items list
+
+    bytes += generator.text(
+      "2 CHK CHARGA (don't over cooked it serve with lemon garnishing)",
+      styles: const PosStyles(align: PosAlign.left),
+    );
+
+    bytes += generator.text(
+      "1 Chk Biryani",
+      styles: const PosStyles(align: PosAlign.left),
+    );
+
+    bytes += generator.text(
+      '  - without Potatoes',
+      styles: const PosStyles(align: PosAlign.right),
+    );
+
+    bytes += generator.emptyLines(1);
+
+    // Customer Info
+    bytes += generator.text(
+      'Customer Info:',
+      styles: const PosStyles(align: PosAlign.left),
+    );
+    bytes += generator.text(
+      'Name: Rafia',
+      styles: const PosStyles(align: PosAlign.left),
+    );
+    bytes += generator.text(
+      'Phone: 3466297214',
+      styles: const PosStyles(align: PosAlign.left),
+    );
+    // bytes += generator.text('ID: VQ2KBTKWAGMNE', styles: const PosStyles(align: PosAlign.left));
+
+    bytes += generator.emptyLines(1);
 
     bytes += generator.cut();
 
@@ -616,7 +716,21 @@ class _ThermalPrinterConnectivityState
               print('connection status : ${res.toString()}');
               await printTicket(res, ip: ipController.text.trim(), port: 9100);
             },
-            child: Text('Print Receipt'),
+            child: Text('Print Sale Demo Receipt'),
+          ),
+
+          ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.resolveWith((states) {
+                return Colors.green;
+              }),
+            ),
+            onPressed: () async {
+              var res = await connectionBuild1();
+              print('connection status : ${res.toString()}');
+              await printTicket(res, ip: ipController.text.trim(), port: 9100);
+            },
+            child: Text('Print Kds Demo Receipt'),
           ),
         ],
       ),
