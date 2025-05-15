@@ -42,7 +42,7 @@ class ThermalPrinterConnectivityScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   List<int> receiptBytes =
-                      await thermalPrinterServices.PrepareKdsReceipt();
+                      await thermalPrinterServices.prepareKdsReceipt();
                   await thermalPrinterServices.printTicket(
                     receiptBytes,
                     ipController.text.trim(),

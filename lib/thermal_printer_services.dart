@@ -1,3 +1,4 @@
+import 'dart:developer' show log;
 import 'dart:typed_data' show ByteData, Uint8List;
 import 'package:intl/intl.dart';
 
@@ -5,10 +6,7 @@ import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_esc_pos_network/flutter_esc_pos_network.dart';
 import 'package:flutter_esc_pos_utils/flutter_esc_pos_utils.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
-
-
-import 'package:image/image.dart' as Img;
+import 'package:image/image.dart' as img;
 
 class ThermalPrinterServices {
 
@@ -17,10 +15,10 @@ class ThermalPrinterServices {
     final printer = PrinterNetworkManager(ip, port: 9100);
     PosPrintResult connect = await printer.connect();
     if (connect.msg.contains('Success')) {
-      print('connected successfully');
+      log('connected successfully');
     }
     if (connect == PosPrintResult.success) {
-      PosPrintResult printing = await printer.printTicket(ticket);
+       await printer.printTicket(ticket);
       printer.disconnect();
     } else {
       Fluttertoast.showToast(
@@ -32,7 +30,7 @@ class ThermalPrinterServices {
 
 
     // Function to build the receipt
-  Future<List<int>> PrepareKdsReceipt() async {
+  Future<List<int>> prepareKdsReceipt() async {
     final profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm80, profile);
     List<int> bytes = [];
@@ -144,7 +142,7 @@ class ThermalPrinterServices {
 
     final Uint8List byte = data.buffer.asUint8List();
 
-    final Img.Image image = Img.decodeImage(byte)!;
+    final img.Image image = img.decodeImage(byte)!;
     // Using `ESC *`
     bytes += generator.image(image);
     // Using `GS v 0` (obsolete)
@@ -233,7 +231,7 @@ class ThermalPrinterServices {
         text: '1  Mango Lassi',
         width: 9,
 
-        styles: PosStyles(align: PosAlign.left, underline: false),
+        styles: const PosStyles(align: PosAlign.left, underline: false),
       ),
       // PosColumn(
       //   // text: 'col6',
@@ -243,7 +241,7 @@ class ThermalPrinterServices {
       PosColumn(
         text: '\$ 2.99 ',
         width: 3,
-        styles: PosStyles(align: PosAlign.right, underline: false),
+        styles: const PosStyles(align: PosAlign.right, underline: false),
       ),
     ]);
     bytes += generator.text(
@@ -261,7 +259,7 @@ class ThermalPrinterServices {
       PosColumn(
         text: '1  Chicken Biryani',
         width: 9,
-        styles: PosStyles(align: PosAlign.left, underline: false),
+        styles: const PosStyles(align: PosAlign.left, underline: false),
       ),
       // PosColumn(
       //   // text: 'col6',
@@ -271,7 +269,7 @@ class ThermalPrinterServices {
       PosColumn(
         text: '\$ 8.99 ',
         width: 3,
-        styles: PosStyles(align: PosAlign.right, underline: false),
+        styles: const PosStyles(align: PosAlign.right, underline: false),
       ),
     ]);
 
@@ -285,7 +283,7 @@ class ThermalPrinterServices {
       PosColumn(
         text: '1  Chicken Pulao',
         width: 9,
-        styles: PosStyles(align: PosAlign.left, underline: false),
+        styles: const PosStyles(align: PosAlign.left, underline: false),
       ),
       // PosColumn(
       //   // text: 'col6',
@@ -295,7 +293,7 @@ class ThermalPrinterServices {
       PosColumn(
         text: '\$ 8.99 ',
         width: 3,
-        styles: PosStyles(align: PosAlign.right, underline: false),
+        styles: const PosStyles(align: PosAlign.right, underline: false),
       ),
     ]);
 
@@ -310,17 +308,17 @@ class ThermalPrinterServices {
       PosColumn(
         text: 'Sales Tax',
         width: 4,
-        styles: PosStyles(align: PosAlign.left, underline: false),
+        styles: const PosStyles(align: PosAlign.left, underline: false),
       ),
       PosColumn(
         text: '8.25%',
         width: 4,
-        styles: PosStyles(align: PosAlign.center, underline: false),
+        styles: const PosStyles(align: PosAlign.center, underline: false),
       ),
       PosColumn(
         text: '\$ 0.99 ',
         width: 4,
-        styles: PosStyles(align: PosAlign.right, underline: false),
+        styles: const PosStyles(align: PosAlign.right, underline: false),
       ),
     ]);
 
@@ -330,7 +328,7 @@ class ThermalPrinterServices {
       PosColumn(
         text: 'Total',
         width: 6,
-        styles: PosStyles(
+        styles: const PosStyles(
           align: PosAlign.left,
           underline: false,
           bold: true,
@@ -342,7 +340,7 @@ class ThermalPrinterServices {
       PosColumn(
         text: '\$ 0.00 ',
         width: 6,
-        styles: PosStyles(
+        styles: const PosStyles(
           align: PosAlign.right,
           underline: false,
           bold: true,
@@ -356,13 +354,13 @@ class ThermalPrinterServices {
       PosColumn(
         text: 'CASH SALE',
         width: 6,
-        styles: PosStyles(align: PosAlign.left, underline: false, bold: true),
+        styles: const PosStyles(align: PosAlign.left, underline: false, bold: true),
       ),
 
       PosColumn(
         text: '\$ 12.97 ',
         width: 6,
-        styles: PosStyles(align: PosAlign.right, underline: false, bold: false),
+        styles: const PosStyles(align: PosAlign.right, underline: false, bold: false),
       ),
     ]);
 
@@ -370,13 +368,13 @@ class ThermalPrinterServices {
       PosColumn(
         text: 'CASH Tendered',
         width: 6,
-        styles: PosStyles(align: PosAlign.left, underline: false, bold: true),
+        styles: const PosStyles(align: PosAlign.left, underline: false, bold: true),
       ),
 
       PosColumn(
         text: '\$ 20.00 ',
         width: 6,
-        styles: PosStyles(align: PosAlign.right, underline: false, bold: false),
+        styles: const PosStyles(align: PosAlign.right, underline: false, bold: false),
       ),
     ]);
 
@@ -384,13 +382,13 @@ class ThermalPrinterServices {
       PosColumn(
         text: 'CHANGE',
         width: 6,
-        styles: PosStyles(align: PosAlign.left, underline: false, bold: true),
+        styles: const PosStyles(align: PosAlign.left, underline: false, bold: true),
       ),
 
       PosColumn(
         text: '\$ 7.03 ',
         width: 6,
-        styles: PosStyles(align: PosAlign.right, underline: false, bold: false),
+        styles: const PosStyles(align: PosAlign.right, underline: false, bold: false),
       ),
     ]);
     bytes += generator.emptyLines(1);
