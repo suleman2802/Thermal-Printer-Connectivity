@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:printer_integration_application/thermal_printer_connectivity.dart';
+import 'package:printer_integration_application/thermal_printer_service_screen.dart';
 
 void main() {
   runApp(const MyApp());

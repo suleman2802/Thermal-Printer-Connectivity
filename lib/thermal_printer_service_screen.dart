@@ -28,6 +28,20 @@ class ThermalPrinterConnectivityScreen extends StatelessWidget {
               ElevatedButton(
                 onPressed: () async {
                   List<int> receiptBytes =
+                      await thermalPrinterServices
+                          .prepareConnectionBuildReceipt();
+                  await thermalPrinterServices.printTicket(
+                    receiptBytes,
+                    ipController.text.trim(),
+                    port: 9100,
+                  );
+                },
+                child: Text('Print Connection Successful Receipt'),
+              ),
+              SizedBox(width: 20),
+              ElevatedButton(
+                onPressed: () async {
+                  List<int> receiptBytes =
                       await thermalPrinterServices.prepareSaleReceipt();
 
                   await thermalPrinterServices.printTicket(

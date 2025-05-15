@@ -416,7 +416,7 @@ class ThermalPrinterServices {
     return bytes;
   }
 
-    Future<List<int>> prepareConnectionBuildFReceipt() async {
+    Future<List<int>> prepareConnectionBuildReceipt() async {
     final profile = await CapabilityProfile.load();
     final generator = Generator(PaperSize.mm80, profile);
     List<int> bytes = [];
